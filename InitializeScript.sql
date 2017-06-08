@@ -1,0 +1,1 @@
+INSERT INTO test.user (name, age, isAdmin) VALUES ('Test1', 12, 0), ('Test2', 25, 1), ('Test3', 312, 0)

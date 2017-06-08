@@ -89,10 +89,7 @@ public class MyUI extends UI {
                     if (isAllFine) {
                         dao.addUser(new User(nameOfUser, ageOfUser, isAdmin, new Date(new java.util.Date().getTime())));
                         newVerticalLayout.addComponent(new Label("User created!"));
-                    } else {
-                        newVerticalLayout.addComponent(new Label("Smth went wrong:("));
                     }
-
                     updateGrid(grid, dao);
                 } catch (SQLException e) {
                     e.printStackTrace();
