@@ -3,6 +3,7 @@ package main.db;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
@@ -93,6 +94,19 @@ public class UserDaoImpl implements UserDao {
                 session.close();
         }
         return res;
+    }
+
+    @Override
+    public List<User> getUsersByName(String name) throws SQLException {
+        List<User> result = getAllUsers();
+
+        for (User user : new ArrayList<>(result))
+        {
+            if (!user.getName().equals(name))
+                result.remove(user);
+        }
+
+        return result;
     }
 
     @Override

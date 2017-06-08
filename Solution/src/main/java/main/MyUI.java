@@ -13,6 +13,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import javax.servlet.annotation.WebServlet;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -103,6 +104,70 @@ public class MyUI extends UI {
 
             newVerticalLayout.addComponents(name, age, status, addUserButton);
         });
+
+        bar.addItem("Read user by name", menuItem -> {
+            newVerticalLayout.removeAllComponents();
+            TextField name = new TextField("Enter name, please");
+
+            Button findButton = new Button("Read!");
+            findButton.addClickListener(clickEvent -> {
+                boolean isAllFine = true;
+                if (name.getValue().equals(""))
+                {
+                    name.setValue("You must enter name!");
+                    isAllFine = false;
+                }
+                if (isAllFine)
+                {
+                    Grid<User> gridForUsersFoundByName = new Grid<>(User.class);
+                    gridForUsersFoundByName.setColumns("id", "name", "age", "isAdmin", "createdDate");
+                    try {
+                        gridForUsersFoundByName.setItems(dao.getUsersByName(name.getValue()));
+                        newVerticalLayout.addComponent(gridForUsersFoundByName);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            newVerticalLayout.addComponents(name, findButton);
+        });
+
+        bar.addItem("Read user by id", menuItem -> {
+            newVerticalLayout.removeAllComponents();
+            TextField id = new TextField("Enter name, please");
+
+            Button findButton = new Button("Read!");
+            findButton.addClickListener(clickEvent -> {
+                boolean isAllFine = true;
+                if (id.getValue().equals("")) {
+                    id.setValue("You must enter name!");
+                    isAllFine = false;
+                }
+                int idOfUser = 0;
+
+                try {
+                    idOfUser = Integer.parseInt(id.getValue());
+                } catch (NumberFormatException e) {
+                    id.setValue("It's not a number!");
+                    isAllFine = false;
+                }
+
+                if (isAllFine) {
+                    try {
+                        User user = dao.getUser(idOfUser);
+                        newVerticalLayout.addComponents(new Label("Id   Name   Age   Is Admin   Created Date"));
+                        newVerticalLayout.addComponent(new Label(user.getId() + "   " + user.getName() + "   " + user.getAge() +
+                                "   " + user.getIsAdmin() + "   " + user.getCreatedDate()));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            newVerticalLayout.addComponents(id, findButton);
+        });
+
+        grid.setSizeFull();
 
         bar.addItem("Update", menuItem -> {
             newVerticalLayout.removeAllComponents();
