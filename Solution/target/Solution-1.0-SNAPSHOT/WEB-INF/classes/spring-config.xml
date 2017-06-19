@@ -3,6 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="standardDaoImpl" class="main.db.UserDaoImpl"/>
+    <bean id="standardDaoImpl" class="Solution.user.dao.UserDaoImpl"/>
 
 </beans>
