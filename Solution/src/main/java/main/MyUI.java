@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -27,6 +28,9 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        final Label userCreatedLabel = new Label("User created!");
+        final Label userUpdatedLabel = new Label("User updated!");
+        final Label userDeletedLabel = new Label("User deleted!");
         VerticalLayout vertLayout = new VerticalLayout();
         VerticalLayout verticalLayout = new VerticalLayout();
         final HorizontalLayout layout = new HorizontalLayout();
@@ -73,22 +77,23 @@ public class MyUI extends UI {
                 }
 
                 boolean isAdmin = false;
-                switch (status.getSelectedItem().get())
-                {
-                    case No:
-                        isAdmin = false;
-                        break;
-                    case Yes:
-                        isAdmin = true;
-                        break;
-                    default:
-                        isAllFine = false;
-                }
+                Optional<UserStatus> status1 = status.getSelectedItem();
+                if (status1.isPresent())
+                    switch (status.getSelectedItem().get())
+                    {
+                        case No:
+                            isAdmin = false;
+                            break;
+                        case Yes:
+                            isAdmin = true;
+                            break;
+                    }
 
                 try {
                     if (isAllFine) {
+                        newVerticalLayout.removeComponent(userCreatedLabel);
                         dao.addUser(new User(nameOfUser, ageOfUser, isAdmin, new Date(new java.util.Date().getTime())));
-                        newVerticalLayout.addComponent(new Label("User created!"));
+                        newVerticalLayout.addComponent(userCreatedLabel);
                     }
                     updateGrid(grid, dao);
                 } catch (SQLException e) {
@@ -213,22 +218,22 @@ public class MyUI extends UI {
                 }
 
                 boolean isAdmin = false;
-                switch (status.getSelectedItem().get())
-                {
-                    case No:
-                        isAdmin = false;
-                        break;
-                    case Yes:
-                        isAdmin = true;
-                        break;
-                    default:
-                        isAllFine = false;
-                }
+                if (status.getSelectedItem().isPresent())
+                    switch (status.getSelectedItem().get())
+                    {
+                        case No:
+                            isAdmin = false;
+                            break;
+                        case Yes:
+                            isAdmin = true;
+                            break;
+                    }
 
                 try {
                     if (isAllFine) {
+                        newVerticalLayout.removeComponent(userUpdatedLabel);
                         dao.updateUser(new User(nameOfUser, ageOfUser, isAdmin, new Date(new java.util.Date().getTime())), idOfUser);
-                        newVerticalLayout.addComponent(new Label("User updated!"));
+                        newVerticalLayout.addComponent(userUpdatedLabel);
                     }
 
                     updateGrid(grid, dao);
@@ -263,8 +268,9 @@ public class MyUI extends UI {
 
                 try {
                     if (isAllFine) {
+                        newVerticalLayout.removeComponent(userDeletedLabel);
                         dao.deleteUser(idOfUser);
-                        newVerticalLayout.addComponent(new Label("User deleted!"));
+                        newVerticalLayout.addComponent(userDeletedLabel);
                     }
 
                     updateGrid(grid, dao);
